@@ -9,6 +9,10 @@ from django.http import HttpResponse
 #need to be mapped to URL
 
 def test(request):
-    return HttpResponse('testback')
+    return HttpResponse("testback")
 def home(request):
     return render(request,'home.html')
+def signup(request):
+    return HttpResponse("signup page")
+def login(request):
+    return HttpResponse("login page")

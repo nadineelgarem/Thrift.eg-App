@@ -5,58 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <style>
+        /* Overall styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            font-family: 'Verdana', sans-serif;
+            background-color: #fff8e1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
         }
 
+        /* Title styling */
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #3d5a80;
+            font-size: 2.5em;
+            margin-bottom: 10px;
             text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
+        /* Subtitle text styling */
         p {
-            font-size: 18px;
-            margin-bottom: 40px;
+            font-size: 1.2em;
+            color: #606c38;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        .button-container {
+        /* Container box for buttons */
+        .button-box {
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            align-items: center;
+            background-color: #faf3e0;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 300px;
         }
 
+        /* Button styling */
         .button {
-            padding: 15px 30px;
-            font-size: 16px;
+            width: 100%;
+            padding: 15px 0;
+            font-size: 1.1em;
             color: #fff;
-            background-color: #007BFF;
+            background-color: #38a1db;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            
         }
 
+        /* Button hover effect */
         .button:hover {
-            background-color: #0056b3;
+            background-color: #227093;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Additional styling for mobile */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .button {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Welcome to Thrifteg</h1>
-    <p>Please select an option:</p>
-    <div class="button-container">
-        <button class="button">Sign Up</button>
-        <button class="button">Log In</button>
+    <p>Discover unique treasures at affordable prices!</p>
+    <div class="button-box">
+        <a href="{% url 'signup' %}" class="button">Sign Up</a>
+        <a href="{% url 'login' %}" class="button">Log In</a>
+
     </div>
 </body>
 </html>
+
 

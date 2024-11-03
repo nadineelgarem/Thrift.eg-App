@@ -23,7 +23,8 @@ urlpatterns = [
     path('', home, name='home'),  # Root URL
     #path('', lambda request: redirect('/thrifteg/')),
     path('admin/', admin.site.urls),
-    path('thrifteg/', include('thrifteg.urls')),  
+    path('thrifteg/', include('thrifteg.urls')),
+
 ]
-print("Registered URL patterns:", urlpatterns)
+
 
