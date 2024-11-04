@@ -18,13 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 from thrifteg.views import home
+import debug_toolbar
 
 urlpatterns = [
     path('', home, name='home'),  # Root URL
-    #path('', lambda request: redirect('/thrifteg/')),
     path('admin/', admin.site.urls),
     path('thrifteg/', include('thrifteg.urls')),
-
+    path("__debug__",include(debug_toolbar.urls)),
 ]
 
 
