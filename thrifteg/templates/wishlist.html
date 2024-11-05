@@ -1,0 +1,16 @@
+<h2>Wishlist</h2>
+{% if wishlist_items %}
+    <ul>
+        {% for item in wishlist_items %}
+            <li>
+                <img src="{{ item.item.image.url }}" alt="{{ item.item.name }}" width="50">
+                <strong>{{ item.item.name }}</strong>
+                <p>${{ item.item.price }}</p>
+                <a href="{% url 'remove_from_wishlist' item.item.id %}">Remove</a>
+                <a href="{% url 'add_to_cart' item.item.id %}">Add to Cart</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Your wishlist is empty.</p>
+{% endif %}
