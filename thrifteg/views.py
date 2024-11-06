@@ -23,7 +23,7 @@ def signup(request):
         form=UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("home")#change to successive page when created
+            return redirect("home")
     else:
         form = UserCreationForm()  #empty form
     return render(request, 'signup.html', {"form": form}) 
@@ -31,7 +31,10 @@ def signup(request):
     #return HttpResponse("login page")
 #def mainpage(request):
  #   return render(request, 'mainpage.html') 
-
+def cart(request):
+    return render(request, 'cart.html')
+def wishlist(request):
+    return render(request, 'wishlist.html')
 ##-------------------------------------------
 def mainpage(request):
     gender = request.GET.get('gender', 'Women')
@@ -89,6 +92,17 @@ def remove_from_cart(request, item_id):
     cart_item.delete()
     messages.success(request, f"Removed {cart_item.item.name} from your cart.")
     return redirect('view_cart')
+
+@login_required
+def add_to_wishlist(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    wishlist_item, created = WishlistItem.objects.get_or_create(user=request.user, item=item)
+    if created:
+        messages.success(request, f"Added {item.name} to your wishlist.")
+    else:
+        messages.info(request, f"{item.name} is already in your wishlist.")
+    return redirect('view_wishlist')
+
 
 @login_required
 def remove_from_wishlist(request, item_id):

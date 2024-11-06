@@ -87,19 +87,18 @@
 
         /* Hero Banner */
         .hero-banner {
-    width: 100%;
-    height: 400px;
-    background-image: url('https://www.bemisred.com/cdn/shop/articles/from-fashion-donts-to-style-dos-a-guide-to-nailing-your-look-755878_1200x.jpg?v=1689167619');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-}
-
+            width: 100%;
+            height: 400px;
+            background-image: url('https://www.bemisred.com/cdn/shop/articles/from-fashion-donts-to-style-dos-a-guide-to-nailing-your-look-755878_1200x.jpg?v=1689167619');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
 
         .hero-banner h2 {
             font-size: 2.8em;
@@ -186,8 +185,8 @@
             margin: 20px auto;
             max-width: 1200px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted grid for smaller items */
+            gap: 15px;
             padding: 0 20px;
         }
 
@@ -198,22 +197,53 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-        }
+            width: 180px; /* Set a fixed width to reduce item size */
+            height: auto; /* Auto adjust the height based on content */
+}
 
         .product-item img {
             width: 100%;
             height: auto;
+            max-height: 150px; /* Adjust max height of the image */
+            object-fit: contain; /* Keep image aspect ratio intact */
             border-bottom: 1px solid #ddd;
-        }
+}
+
 
         .product-item h4, .product-item p {
             padding: 10px 15px;
             color: #333;
+            font-size: 1em; /* Adjusted font size */
         }
 
-        .product-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        .product-item .button.primary {
+            display: block;
+            text-align: center;
+            margin: 10px;
+            padding: 12px 20px; /* Increased padding to match cart button */
+            color: white;
+            background-color: #333;
+            border-radius: 5px;
+            font-size: 1em; /* Adjusted font size */
+        }
+
+        .product-item .button.primary:hover {
+            background-color: #555;
+        }
+
+        .product-item .button {
+            display: block;
+            text-align: center;
+            margin: 10px;
+            padding: 12px 20px; /* Same as cart button */
+            color: white;
+            background-color: #333;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .product-item .button:hover {
+            background-color: #555;
         }
 
         /* Footer */
@@ -232,7 +262,6 @@
             <h1 class="logo">Thrifteg</h1>
             <nav>
                 <input type="text" placeholder="Search...">
-                
                 <a href="/thrifteg/cart/" class="button">Cart</a>
                 <a href="/thrifteg/wishlist/" class="button">Wishlist</a>
             </nav>
@@ -276,24 +305,24 @@
                 <img src="{{ item.image.url }}" alt="{{ item.name }}">
                 <h4>{{ item.name }}</h4>
                 <p>${{ item.price }}</p>
+                <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
+                <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
             </div>
         {% empty %}
             <p>No new items available.</p>
         {% endfor %}
     </div>
 
-    <footer>
-        <p>&copy; 2024 Thrifteg. All rights reserved.</p>
-    </footer>
-
+    <!-- JavaScript for Sidebar Toggle -->
     <script>
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-
-        function selectGender(gender) {
-            window.location.href = `?gender=${gender}`;
+            document.getElementById("sidebar").classList.toggle("active");
         }
     </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>Thrifteg &copy; 2024. All rights reserved.</p>
+    </footer>
 </body>
 </html>
