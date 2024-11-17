@@ -1,10 +1,21 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+<<<<<<< HEAD
 from .models import Item, CartItem, WishlistItem  
+=======
+from django.forms import modelformset_factory
+from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage
+from .forms import SellerRegistrationForm, ProductImageForm
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
 
 # Create your views here.
@@ -37,19 +48,81 @@ def wishlist(request):
     return render(request, 'wishlist.html')
 ##-------------------------------------------
 def mainpage(request):
+<<<<<<< HEAD
     gender = request.GET.get('gender', 'Women')
     category = request.GET.get('category')
     items = Item.objects.filter(category__gender=gender)
     if category:
         items = items.filter(category__name=category)
     new_items = Item.objects.filter(category__gender=gender, is_new=True).order_by('-date_added')[:10]
+=======
+    gender = request.GET.get('gender', 'Women')  # Default to 'Women'
+    category = request.GET.get('category')      # Category from query parameters
+    query = request.GET.get('query')            # Search query
+
+    # Fetch all items for the selected gender
+    items = Item.objects.filter(category__gender=gender).distinct()
+
+    # Filter by category if specified
+    if category:
+        items = items.filter(category__name=category)
+
+    # Filter by search query if specified
+    if query:
+        items = items.filter(name__icontains=query)
+
+    # Fetch "new items" separately and exclude them from the general items list
+    new_items = Item.objects.filter(category__gender=gender, is_new=True).distinct().order_by('-date_added')
+    items = items.exclude(id__in=new_items.values_list('id', flat=True))  # Exclude new items from the general list
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
     return render(request, 'mainpage.html', {
         'items': items,
         'new_items': new_items,
         'gender': gender,
         'category': category,
+<<<<<<< HEAD
     })
 
+=======
+        'query': query,  # Pass the query back for the search bar
+    })
+
+
+
+
+# Seller Registration View
+def register_seller(request):
+    ProductImageFormSet = modelformset_factory(ProductImage, form=ProductImageForm, extra=3)
+    if request.method == "POST":
+        seller_form = SellerRegistrationForm(request.POST, request.FILES)
+        formset = ProductImageFormSet(request.POST, request.FILES, queryset=ProductImage.objects.none())
+        if seller_form.is_valid() and formset.is_valid():
+            seller = seller_form.save()
+            for form in formset:
+                if form.cleaned_data:
+                    product_image = form.save(commit=False)
+                    product_image.seller = seller
+                    product_image.save()
+            return redirect('mainpage')
+    else:
+        seller_form = SellerRegistrationForm()
+        formset = ProductImageFormSet(queryset=ProductImage.objects.none())
+    return render(request, 'register_seller.html', {'seller_form': seller_form, 'formset': formset})
+
+def category_items(request, gender, category_name):
+    # Fetch items by gender and category
+    items = Item.objects.filter(category__name=category_name, category__gender=gender).distinct()
+
+    return render(request, 'category_items.html', {  # Ensure correct template is used
+        'items': items,
+        'category_name': category_name,
+        'gender': gender,
+    })
+
+
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 def login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)

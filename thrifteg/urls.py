@@ -1,6 +1,11 @@
 from django.urls import path
 from . import views
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 #url config
 urlpatterns = [
     path('', views.home, name='home'), 
@@ -19,4 +24,16 @@ urlpatterns = [
     path('cart/', views.view_cart, name='view_cart'),
     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('remove_from_wishlist/<int:item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+<<<<<<< HEAD
 ]
+=======
+      # Seller registration
+    path('register_seller/', views.register_seller, name='register_seller'),
+    
+
+    path('category/<str:gender>/<str:category_name>/', views.category_items, name='category_items'),
+    # Category view by name
+    path('category/<str:category_name>/', views.category_items, name='category_items'),
+]
+
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718

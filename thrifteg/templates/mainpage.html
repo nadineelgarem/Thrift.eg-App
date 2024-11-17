@@ -262,8 +262,14 @@
             <h1 class="logo">Thrifteg</h1>
             <nav>
                 <input type="text" placeholder="Search...">
+<<<<<<< HEAD
                 <a href="/thrifteg/cart/" class="button">Cart</a>
                 <a href="/thrifteg/wishlist/" class="button">Wishlist</a>
+=======
+                <a href="{% url 'view_cart' %}" class="button">Cart</a>
+                <a href="{% url 'view_wishlist' %}" class="button">Wishlist</a>
+                <a href="{% url 'register_seller' %}" class="button primary">Register as Seller</a>
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
             </nav>
         </div>
     </header>
@@ -271,10 +277,17 @@
     <!-- Toggle Sidebar Button -->
     <div class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Categories</div>
 
+<<<<<<< HEAD
+=======
+    <div class="content">
+       
+        
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
     <!-- Sidebar with Categories -->
     <div class="sidebar" id="sidebar">
         <h3>Categories</h3>
         <ul>
+<<<<<<< HEAD
             <li><a href="?gender={{ gender }}&category=Accessories">Accessories</a></li>
             <li><a href="?gender={{ gender }}&category=Bags">Bags</a></li>
             <li><a href="?gender={{ gender }}&category=Dresses">Dresses</a></li>
@@ -288,6 +301,41 @@
             <li><a href="?gender={{ gender }}&category=Trousers">Trousers</a></li>
         </ul>
     </div>
+=======
+            <h3>Women Categories</h3>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Accessories' %}">Accessories</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Bags' %}">Bags</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Dresses' %}">Dresses</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Jeans' %}">Jeans</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Knitwear' %}">Knitwear</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Outerwear' %}">Outerwear</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Shoes' %}">Shoes</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Shorts' %}">Shorts</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Skirts' %}">Skirts</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Tops' %}">Tops</a></li>
+            <li><a href="{% url 'category_items' gender='Women' category_name='Trousers' %}">Trousers</a></li>
+        </ul>
+    </div>
+    
+
+    <div class="category-items">
+        <h2>All Items</h2>
+        <div class="item-list">
+            {% for item in items %}
+                <div class="item-card">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                    <h3>{{ item.name }}</h3>
+                    <p>${{ item.current_price }}</p>
+                    <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
+                    <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
+                </div>
+            {% empty %}
+                <p>No items available.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
     <!-- Hero Banner -->
     <div class="hero-banner">
@@ -300,6 +348,7 @@
     <!-- New Arrivals Section -->
     <div class="new-arrivals">
         <h3>New Arrivals</h3>
+<<<<<<< HEAD
         {% for item in new_items %}
             <div class="product-item">
                 <img src="{{ item.image.url }}" alt="{{ item.name }}">
@@ -312,6 +361,23 @@
             <p>No new items available.</p>
         {% endfor %}
     </div>
+=======
+        <div class="item-list">
+            {% for item in new_items %}
+                <div class="item-card">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                    <h4>{{ item.name }}</h4>
+                    <p>${{ item.current_price }}</p>
+                    <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
+                    <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
+                </div>
+            {% empty %}
+                <p>No new arrivals available.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
     <!-- JavaScript for Sidebar Toggle -->
     <script>
@@ -325,4 +391,8 @@
         <p>Thrifteg &copy; 2024. All rights reserved.</p>
     </footer>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
