@@ -3,20 +3,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Category(models.Model):
-<<<<<<< HEAD
-    name = models.CharField(max_length=100)
-    gender = models.CharField(
-        max_length=10,
-        choices=[('Women', 'Women'), ('Men', 'Men'), ('Kids', 'Kids')]
-    )
-=======
     name = models.CharField(max_length=100)  # Example field for category name
     gender = models.CharField(max_length=10, choices=[('Women', 'Women'), ('Men', 'Men')])  # Example field for gender
 
     def __str__(self):
         return self.name  # This will display the category name in the admin panel
 
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
     def _str_(self):
         return f"{self.name} ({self.gender})"
@@ -49,8 +41,6 @@ class WishlistItem(models.Model):
 
     def _str_(self):
         return f"{self.user.username}'s Wishlist - {self.item.name}"
-<<<<<<< HEAD
-=======
 class Seller(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -72,7 +62,6 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.seller.name}"
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

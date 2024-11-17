@@ -1,21 +1,13 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from .models import Item, CartItem, WishlistItem  
-=======
 from django.forms import modelformset_factory
 from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage
 from .forms import SellerRegistrationForm, ProductImageForm
 
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 
 
 # Create your views here.
@@ -48,14 +40,6 @@ def wishlist(request):
     return render(request, 'wishlist.html')
 ##-------------------------------------------
 def mainpage(request):
-<<<<<<< HEAD
-    gender = request.GET.get('gender', 'Women')
-    category = request.GET.get('category')
-    items = Item.objects.filter(category__gender=gender)
-    if category:
-        items = items.filter(category__name=category)
-    new_items = Item.objects.filter(category__gender=gender, is_new=True).order_by('-date_added')[:10]
-=======
     gender = request.GET.get('gender', 'Women')  # Default to 'Women'
     category = request.GET.get('category')      # Category from query parameters
     query = request.GET.get('query')            # Search query
@@ -75,16 +59,11 @@ def mainpage(request):
     new_items = Item.objects.filter(category__gender=gender, is_new=True).distinct().order_by('-date_added')
     items = items.exclude(id__in=new_items.values_list('id', flat=True))  # Exclude new items from the general list
 
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
     return render(request, 'mainpage.html', {
         'items': items,
         'new_items': new_items,
         'gender': gender,
         'category': category,
-<<<<<<< HEAD
-    })
-
-=======
         'query': query,  # Pass the query back for the search bar
     })
 
@@ -122,7 +101,6 @@ def category_items(request, gender, category_name):
 
 
 
->>>>>>> eaabd58cb99ad6984355f8df90e7838729ec6718
 def login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
