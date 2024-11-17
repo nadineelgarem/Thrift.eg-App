@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as Seller</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: #333;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group img {
+            display: block;
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        .image-upload-group {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+        }
+
+        .image-upload-group h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Seller Registration Form</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Seller form fields -->
+            <div class="form-group">
+                {{ seller_form.name.label_tag }} 
+                {{ seller_form.name }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.email.label_tag }}
+                {{ seller_form.email }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.phone_number.label_tag }}
+                {{ seller_form.phone_number }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.address.label_tag }}
+                {{ seller_form.address }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.product_type.label_tag }}
+                {{ seller_form.product_type }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.product_description.label_tag }}
+                {{ seller_form.product_description }}
+            </div>
+            <div class="form-group">
+                {{ seller_form.identity_image.label_tag }}
+                {{ seller_form.identity_image }}
+            </div>
+
+            <!-- Product Image Formset -->
+            <div class="image-upload-group">
+                <h3>Product Images</h3>
+                <p>Add up to 3 images of your product:</p>
+                {% for form in formset %}
+                    <div class="form-group">
+                        {{ form.image.label_tag }}
+                        {{ form.image }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Description for all images -->
+            <div class="form-group">
+                {{ formset.management_form }}
+                {{ formset.empty_form.description.label_tag }}
+                {{ formset.empty_form.description }}
+            </div>
+
+            <button type="submit" class="button">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

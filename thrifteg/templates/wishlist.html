@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .wishlist-container {
+            max-width: 800px;
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .wishlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .wishlist-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details strong {
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .item-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            text-decoration: none;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .btn-remove {
+            background-color: #ff4d4d;
+        }
+
+        .btn-remove:hover {
+            background-color: #e60000;
+        }
+
+        .btn-add-to-cart {
+            background-color: #4CAF50;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #45a049;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            color: #888;
+            font-size: 1.1em;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wishlist-container">
+    <h2>Wishlist</h2>
+
+    {% if wishlist_items %}
+        <ul>
+            {% for item in wishlist_items %}
+                <li class="wishlist-item">
+                    <img src="{{ item.item.image.url }}" alt="{{ item.item.name }}">
+                    <div class="item-details">
+                        <strong>{{ item.item.name }}</strong>
+                        <p>${{ item.item.price }}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="{% url 'remove_from_wishlist' item.item.id %}" class="btn btn-remove">Remove</a>
+                        <a href="{% url 'add_to_cart' item.item.id %}" class="btn btn-add-to-cart">Add to Cart</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-wishlist">Your wishlist is empty.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
+

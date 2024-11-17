@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category_name }} - Thrifteg</title>
+</head>
+<body>
+    <header>
+        <h1>{{ category_name }} - {{ gender }}</h1>
+        <a href="{% url 'mainpage' %}">Back to Main Page</a>
+    </header>
+    <div class="items-grid">
+        {% for item in items %}
+            <div class="product-item">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                <h4>{{ item.name }}</h4>
+                <p>${{ item.price }}</p>
+                <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
+                <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
+            </div>
+        {% empty %}
+            <p>No items available in this category.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
