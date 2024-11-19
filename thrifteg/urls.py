@@ -13,6 +13,14 @@ urlpatterns = [
 #]
 
 ##---------------------------------------
+    path('chat/', views.chat_with_seller, name='chat_with_seller'),
+    path('chat/<int:seller_id>/', views.chat_view, name='chat_view'),
+
+    path('search/', views.search_results, name='search_results'),
+    path('item/<int:id>/', views.item_detail, name='item_detail'),
+
+    path('filter/', views.filter_items, name='filter_items'),
+
     path('add_to_wishlist/<int:item_id>/', views.add_to_wishlist, name='add_to_wishlist'),
 
     path('wishlist/', views.view_wishlist, name='view_wishlist'),

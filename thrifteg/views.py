@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage
-from .forms import SellerRegistrationForm, ProductImageForm
+from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage, ChatMessage
+from .forms import SellerRegistrationForm, ProductImageForm, FilterForm 
 
 
 
@@ -40,9 +40,13 @@ def wishlist(request):
     return render(request, 'wishlist.html')
 ##-------------------------------------------
 def mainpage(request):
+    # Get filter parameters from the request
     gender = request.GET.get('gender', 'Women')  # Default to 'Women'
-    category = request.GET.get('category')      # Category from query parameters
-    query = request.GET.get('query')            # Search query
+    category = request.GET.get('category')      # Selected category (if any)
+    query = request.GET.get('query')            # Search query (if any)
+
+    # Fetch all categories to populate the dropdown
+    categories = Category.objects.all()
 
     # Fetch all items for the selected gender
     items = Item.objects.filter(category__gender=gender).distinct()
@@ -55,13 +59,20 @@ def mainpage(request):
     if query:
         items = items.filter(name__icontains=query)
 
-    # Fetch "new items" separately and exclude them from the general items list
-    new_items = Item.objects.filter(category__gender=gender, is_new=True).distinct().order_by('-date_added')
-    items = items.exclude(id__in=new_items.values_list('id', flat=True))  # Exclude new items from the general list
+    # Fetch "new items" (e.g., recently added or marked as new)
+    new_items = Item.objects.filter(
+        category__gender=gender,
+        is_new=True  # Assuming an 'is_new' field exists in the Item model
+    ).distinct().order_by('-date_added')  # Adjust ordering logic as needed
 
+    # Exclude "new items" from the general item list
+    items = items.exclude(id__in=new_items.values_list('id', flat=True))
+
+    # Pass data to the template
     return render(request, 'mainpage.html', {
         'items': items,
         'new_items': new_items,
+        'categories': categories,
         'gender': gender,
         'category': category,
         'query': query,  # Pass the query back for the search bar
@@ -72,23 +83,37 @@ def mainpage(request):
 
 # Seller Registration View
 def register_seller(request):
-    ProductImageFormSet = modelformset_factory(ProductImage, form=ProductImageForm, extra=3)
     if request.method == "POST":
+        # Initialize forms with POST and FILES data
         seller_form = SellerRegistrationForm(request.POST, request.FILES)
-        formset = ProductImageFormSet(request.POST, request.FILES, queryset=ProductImage.objects.none())
-        if seller_form.is_valid() and formset.is_valid():
+        product_image_form = ProductImageForm(request.POST, request.FILES)
+        
+        # Check if both forms are valid
+        if seller_form.is_valid() and product_image_form.is_valid():
+            # Save the seller form first
             seller = seller_form.save()
-            for form in formset:
-                if form.cleaned_data:
-                    product_image = form.save(commit=False)
-                    product_image.seller = seller
-                    product_image.save()
-            return redirect('mainpage')
-    else:
-        seller_form = SellerRegistrationForm()
-        formset = ProductImageFormSet(queryset=ProductImage.objects.none())
-    return render(request, 'register_seller.html', {'seller_form': seller_form, 'formset': formset})
 
+            # Save product image form but don't commit to DB yet
+            product_image = product_image_form.save(commit=False)
+            product_image.seller = seller  # Associate image with the seller
+            product_image.save()
+
+            # Redirect to the main page after saving
+            return redirect('mainpage')
+        else:
+            # If forms are invalid, log the errors for debugging
+            messages.error(request, "Please fix the errors below.")
+            print(seller_form.errors)
+            print(product_image_form.errors)
+    else:
+        # If GET request, initialize empty forms
+        seller_form = SellerRegistrationForm()
+        product_image_form = ProductImageForm()
+
+    return render(request, 'register_seller.html', {
+        'seller_form': seller_form,
+        'product_image_form': product_image_form
+    })
 def category_items(request, gender, category_name):
     # Fetch items by gender and category
     items = Item.objects.filter(category__name=category_name, category__gender=gender).distinct()
@@ -161,3 +186,64 @@ def remove_from_wishlist(request, item_id):
     wishlist_item.delete()
     messages.success(request, f"Removed {wishlist_item.item.name} from your wishlist.")
     return redirect('view_wishlist')
+
+def chat_view(request, seller_id):
+    # Fetch the seller and create a new or retrieve existing chat
+    seller = get_object_or_404(Seller, id=seller_id)
+    # Retrieve chat messages between the logged-in user and the selected seller
+    chat_messages = ChatMessage.objects.filter(seller=seller, user=request.user)
+
+    if request.method == 'POST':
+        # Save the new message to the chat
+        message = request.POST.get('message')
+        if message:
+            ChatMessage.objects.create(user=request.user, seller=seller, message=message)
+    
+    return render(request, 'chat_view.html', {
+        'seller': seller,
+        'chat_messages': chat_messages
+    })
+def chat_with_seller(request):
+    sellers = Seller.objects.all()
+    return render(request, 'chat_with_seller.html', {'sellers': sellers})
+
+from django.shortcuts import render
+from .models import Item
+
+def search_results(request):
+    query = request.GET.get('q', '')
+    if query:
+        items = Item.objects.filter(category__name__icontains=query)
+    else:
+        items = Item.objects.all()
+    return render(request, 'search_results.html', {'items': items, 'query': query})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Item
+
+def item_detail(request, id):
+    item = get_object_or_404(Item, id=id)
+    return render(request, 'item_detail.html', {'item': item})
+
+def filter_items(request):
+    # Initialize filter form
+    filter_form = FilterForm(request.GET)
+    items = Item.objects.all()  # Default to all items
+
+    # If the form is valid and filters are provided, apply them
+    if filter_form.is_valid():
+        category = filter_form.cleaned_data.get('category')
+        min_price = filter_form.cleaned_data.get('min_price')
+        max_price = filter_form.cleaned_data.get('max_price')
+
+        if category:
+            items = items.filter(category=category)
+        if min_price:
+            items = items.filter(price__gte=min_price)
+        if max_price:
+            items = items.filter(price__lte=max_price)
+
+    return render(request, 'mainpage.html', {
+        'items': items,
+        'filter_form': filter_form,
+    })
