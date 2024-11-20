@@ -317,10 +317,16 @@
                 <div class="product-item">
                     <img src="{{ item.image.url }}" alt="{{ item.name }}">
                     <h4>{{ item.name }}</h4>
-                    <p>${{ item.current_price }}</p>
+                    <p>${{ item.price }}</p>
                     <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
                     <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
-                </div>
+                    <div class="filter-dropdown" id="filterDropdown">
+                        <a href="#">Price</a>
+                        <a href="#">Category</a>
+                        <a href="#">Condition</a>
+                        <a href="#">Size</a>
+                    </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>

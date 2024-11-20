@@ -40,13 +40,9 @@ def wishlist(request):
     return render(request, 'wishlist.html')
 ##-------------------------------------------
 def mainpage(request):
-    # Get filter parameters from the request
     gender = request.GET.get('gender', 'Women')  # Default to 'Women'
-    category = request.GET.get('category')      # Selected category (if any)
-    query = request.GET.get('query')            # Search query (if any)
-
-    # Fetch all categories to populate the dropdown
-    categories = Category.objects.all()
+    category = request.GET.get('category')      # Category from query parameters
+    query = request.GET.get('query')            # Search query
 
     # Fetch all items for the selected gender
     items = Item.objects.filter(category__gender=gender).distinct()
@@ -59,20 +55,13 @@ def mainpage(request):
     if query:
         items = items.filter(name__icontains=query)
 
-    # Fetch "new items" (e.g., recently added or marked as new)
-    new_items = Item.objects.filter(
-        category__gender=gender,
-        is_new=True  # Assuming an 'is_new' field exists in the Item model
-    ).distinct().order_by('-date_added')  # Adjust ordering logic as needed
+    # Fetch "new items" separately and exclude them from the general items list
+    new_items = Item.objects.filter(category__gender=gender, is_new=True).distinct().order_by('-date_added')
+    items = items.exclude(id__in=new_items.values_list('id', flat=True))  # Exclude new items from the general list
 
-    # Exclude "new items" from the general item list
-    items = items.exclude(id__in=new_items.values_list('id', flat=True))
-
-    # Pass data to the template
     return render(request, 'mainpage.html', {
         'items': items,
         'new_items': new_items,
-        'categories': categories,
         'gender': gender,
         'category': category,
         'query': query,  # Pass the query back for the search bar
