@@ -1,0 +1,15 @@
+<h2>Chat with {{ seller.name }}</h2>
+<div class="chat-box">
+    {% for message in chat_messages %}
+        <div class="message">
+            <strong>{{ message.user.username }}:</strong> {{ message.message }} <br>
+            <small>{{ message.timestamp }}</small>
+        </div>
+    {% endfor %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="message" placeholder="Type your message..." required></textarea>
+    <button type="submit" class="button">Send Message</button>
+</form>
