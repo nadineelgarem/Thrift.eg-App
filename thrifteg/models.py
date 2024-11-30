@@ -15,32 +15,30 @@ class Category(models.Model):
 
 # Item Model
 class Item(models.Model):
-    name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='items')
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    size = models.CharField(
-        max_length=10,
-        choices=[('S', 'Small'), ('M', 'Medium'), ('L', 'Large'), ('XL', 'Extra Large')],
-        null=True,
-        blank=True
+    name = models.CharField(max_length=100)  # Add a name field for items
+    category = models.ForeignKey(
+        Category,  # Link to the Category model
+        on_delete=models.CASCADE,  # Delete items if the category is deleted
+        related_name='items'  # Allow reverse lookup from Category to Item
     )
     color = models.CharField(max_length=20, null=True, blank=True)
     condition = models.CharField(
         max_length=10,
         choices=[('New', 'New'), ('Used', 'Used')],
         null=True,
-        blank=True
+        blank=True,
     )
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     stock_quantity = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='items/')
+    image = models.ImageField(upload_to="items/")
     date_added = models.DateTimeField(auto_now_add=True)
     is_new = models.BooleanField(default=True)
 
+    def get_sizes_list(self):
+        return self.available_sizes.split(",") if self.available_sizes else []
+
     def __str__(self):
         return self.name
-
 
 
 # WishlistItem Model
@@ -63,6 +61,9 @@ class Seller(models.Model):
     product_description = models.TextField(default="No description provided")
     identity_image = models.ImageField(upload_to='identity/', default='default.jpg')
 
+    rating = models.FloatField(default=0.0)  # Average rating
+    num_ratings = models.PositiveIntegerField(default=0)  # Number of ratings
+
     def __str__(self):
         return self.name
 
@@ -80,9 +81,12 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='cart_entries')
     quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(max_length=10, blank=True, null=True)  # Add this field
 
-    def __str__(self):
-        return f"{self.user.username}'s Cart - {self.item.name} (x{self.quantity})"
+    def __str__(self):  # Ensure correct indentation
+        return f"{self.item.name} (Size: {self.size}) x {self.quantity}"
+
+# ChatMessage Model
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)

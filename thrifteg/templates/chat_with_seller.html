@@ -112,3 +112,23 @@
     <a href="{% url 'mainpage' %}" class="back-button">Back to Main Page</a>
 </body>
 </html>
+{% for seller in sellers %}
+    <div>
+        <h3>{{ seller.name }}</h3>
+        <p>Rating: {{ seller.rating }}</p>
+        <p>Total Ratings: {{ seller.num_ratings }}</p>
+        <form method="post" action="{% url 'rate_seller' %}">
+            {% csrf_token %}
+            <input type="hidden" name="seller_id" value="{{ seller.id }}">
+            <label for="rating-{{ seller.id }}">Rate:</label>
+            <select name="rating" id="rating-{{ seller.id }}">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% endfor %}

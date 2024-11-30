@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Rate Seller</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Rating</button>
+</form>
+{% endblock %}
+<div class="new-arrivals" id="rate-sellers" style="padding-left: 20px;">
+    <h2>Rate Our Sellers</h2>
+    <div class="items-grid">
+        {% for seller in sellers %}
+        <div class="product-item">
+            <h4>{{ seller.name }}</h4>
+            <p>Rating: {{ seller.rating }}</p>
+            <p>Total Ratings: {{ seller.num_ratings }}</p>
+            <form method="post" action="{% url 'rate_seller' %}">
+                {% csrf_token %}
+                <input type="hidden" name="seller_id" value="{{ seller.id }}">
+                <label for="rating-{{ seller.id }}">Rate:</label>
+                <select name="rating" id="rating-{{ seller.id }}" style="margin-bottom: 10px;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button type="submit" class="button primary">Submit</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+

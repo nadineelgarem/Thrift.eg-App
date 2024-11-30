@@ -109,3 +109,22 @@ class FilterForm(forms.Form):
         label="Condition"
     )
 
+class AddToCartForm(forms.Form):
+    size = forms.ChoiceField(choices=[], label="Select Size")
+
+    def __init__(self, *args, **kwargs):
+        item = kwargs.pop('item', None)  # Pass the item instance
+        super().__init__(*args, **kwargs)
+        if item:
+            self.fields['size'].choices = [(size, size) for size in item.get_sizes_list()]
+
+
+class RateSellerForm(forms.Form):
+    seller_id = forms.IntegerField(widget=forms.HiddenInput())  # Hidden seller ID field
+    rating = forms.ChoiceField(
+        choices=[(i, i) for i in range(1, 6)],  # 1 to 5 stars
+        widget=forms.RadioSelect,
+        label="Rate the seller"
+    )
+
+
