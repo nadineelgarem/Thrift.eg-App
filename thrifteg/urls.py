@@ -36,5 +36,7 @@ urlpatterns = [
     path('category/<str:gender>/<str:category_name>/', views.category_items, name='category_items'),
     # Category view by name
     path('category/<str:category_name>/', views.category_items, name='category_items'),
+    path('checkout/', views.checkout, name='checkout'),
+
 ]
 

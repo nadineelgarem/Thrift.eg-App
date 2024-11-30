@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage, ChatMessage
 from .forms import SellerRegistrationForm, ProductImageForm, FilterForm 
-
+from .forms import CheckoutForm
 
 
 # Create your views here.
@@ -159,10 +159,37 @@ def login(request):
     return render(request, 'login.html', {"form": form})
 
 @login_required
+
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
-    total_price = sum(item.item.current_price * item.quantity for item in cart_items)
+    total_price = sum(item.item.price * item.quantity for item in cart_items)  # Use item.item.price
     return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+
+
+
+@login_required
+def checkout(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+    total_price = sum(item.item.price * item.quantity for item in cart_items)  # Calculate total price
+
+    if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            # Save the checkout details
+            checkout = form.save(commit=False)
+            checkout.user = request.user
+            checkout.total_price = total_price
+            checkout.save()
+
+            # Clear the cart after checkout
+            cart_items.delete()
+
+            messages.success(request, "Your order has been placed successfully!")
+            return redirect('mainpage')  # Redirect to main page or order confirmation page
+    else:
+        form = CheckoutForm()
+
+    return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'total_price': total_price})
 
 @login_required
 def view_wishlist(request):

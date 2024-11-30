@@ -13,6 +13,24 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name} ({self.gender})"
 
+class Checkout(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='checkouts')
+    full_name = models.CharField(max_length=100)
+    address = models.TextField()
+    city = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=15)
+    payment_method = models.CharField(
+        max_length=20,
+        choices=[('Card', 'Card'), ('Cash', 'Cash on Delivery')],
+        default='Card'
+    )
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Checkout by {self.user.username} on {self.date_created}"
+    
 # Item Model
 class Item(models.Model):
     name = models.CharField(max_length=200)

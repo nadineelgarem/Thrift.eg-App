@@ -19,6 +19,7 @@
 
         .cart-container {
             max-width: 800px;
+            width: 100%;
             margin: 20px;
             background-color: #fff;
             border-radius: 8px;
@@ -35,6 +36,7 @@
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .cart-item {
@@ -99,63 +101,60 @@
         }
 
         .checkout-btn {
-        background: var(--primary-color);
-        color: white;
-        text-align: center;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 1em;
-        margin-top: 20px;
-        cursor: pointer;
-        display: inline-block;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
+            display: block;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 20px auto 0;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
 
-    .checkout-btn:hover {
-        background: var(--dark-gray);
-        transform: scale(1.05);
-    }
+        .checkout-btn:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
 
-    /* Continue Shopping Link */
-    .empty-cart a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: bold;
-    }
+        .empty-cart a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    .empty-cart a:hover {
-        text-decoration: underline;
-    }
+        .empty-cart a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+    <div class="cart-container">
+        <h2>Shopping Cart</h2>
 
-<div class="cart-container">
-    <h2>Shopping Cart</h2>
-
-    {% if cart_items %}
-        <ul>
-            {% for item in cart_items %}
-                <li class="cart-item">
-                    <img src="{{ item.item.image.url }}" alt="{{ item.item.name }}">
-                    <div class="item-details">
-                        <strong>{{ item.item.name }}</strong>
-                        <p>Quantity: {{ item.quantity }}</p>
-                        <p>${{ item.item.price }} each</p>
-                    </div>
-                    <a href="{% url 'remove_from_cart' item.item.id %}" class="remove-btn">Remove</a>
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="total">
-            <h3>Total: ${{ total_price }}</h3>
-        </div>
-    {% else %}
-        <p class="empty-cart">Your cart is empty.</p>
-    {% endif %}
-
-</div>
-
+        {% if cart_items %}
+            <ul>
+                {% for item in cart_items %}
+                    <li class="cart-item">
+                        <img src="{{ item.item.image.url }}" alt="{{ item.item.name }}">
+                        <div class="item-details">
+                            <strong>{{ item.item.name }}</strong>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p>${{ item.item.price }} each</p>
+                        </div>
+                        <a href="{% url 'remove_from_cart' item.item.id %}" class="remove-btn">Remove</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="total">
+                <h3>Total: ${{ total_price }}</h3>
+            </div>
+            <a href="{% url 'checkout' %}" class="checkout-btn">Proceed to Checkout</a>
+        {% else %}
+            <p class="empty-cart">Your cart is empty.</p>
+        {% endif %}
+    </div>
 </body>
 </html>

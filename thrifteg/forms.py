@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Seller, ProductImage
 from .models import Category 
+from .models import Checkout
 
 # Seller Registration Form
 class SellerRegistrationForm(forms.ModelForm):
@@ -28,6 +29,14 @@ class SellerRegistrationForm(forms.ModelForm):
         model = Seller
         fields = ['name', 'email', 'phone_number', 'address', 'store_name', 'product_type', 'product_description', 'identity_image']
 
+class CheckoutForm(forms.ModelForm):
+    class Meta:
+        model = Checkout
+        fields = ['full_name', 'address', 'city', 'zip_code', 'phone_number', 'payment_method']
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3}),
+            'payment_method': forms.Select(attrs={'class': 'form-control'}),
+        }
 # Product Image Form
 class ProductImageForm(forms.ModelForm):
     image = forms.ImageField(
