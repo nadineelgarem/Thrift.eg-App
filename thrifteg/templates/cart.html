@@ -97,6 +97,39 @@
             font-size: 1.1em;
             margin-top: 30px;
         }
+<<<<<<< HEAD
+=======
+
+        .checkout-btn {
+        background: var(--primary-color);
+        color: white;
+        text-align: center;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1em;
+        margin-top: 20px;
+        cursor: pointer;
+        display: inline-block;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background: var(--dark-gray);
+        transform: scale(1.05);
+    }
+
+    /* Continue Shopping Link */
+    .empty-cart a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .empty-cart a:hover {
+        text-decoration: underline;
+    }
+>>>>>>> partner-repo/main
     </style>
 </head>
 <body>
@@ -129,3 +162,27 @@
 
 </body>
 </html>
+<<<<<<< HEAD
+=======
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cart_item in cart_items %}
+            <tr>
+                <td>{{ cart_item.item.name }}</td>
+                <td>{{ cart_item.size }}</td>
+                <td>{{ cart_item.quantity }}</td>
+                <td>${{ cart_item.item.price }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+>>>>>>> partner-repo/main

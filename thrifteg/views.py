@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage, ChatMessage
 from .forms import SellerRegistrationForm, ProductImageForm, FilterForm 
+<<<<<<< HEAD
+=======
+from .forms import RateSellerForm
+from .forms import AddToCartForm
+>>>>>>> partner-repo/main
 
 
 
@@ -59,24 +64,55 @@ def mainpage(request):
     new_items = Item.objects.filter(category__gender=gender, is_new=True).distinct().order_by('-date_added')
     items = items.exclude(id__in=new_items.values_list('id', flat=True))  # Exclude new items from the general list
 
+<<<<<<< HEAD
+=======
+    sellers = Seller.objects.all()
+
+    # Debugging statements
+    print("Gender Filter:", gender)
+    print("Category Filter:", category)
+    print("Search Query:", query)
+    print("Items:", items)  # Check the queryset for items
+    print("New Items:", new_items)  # Check the queryset for new items
+    print("Sellers:", sellers)  # Check the queryset for sellers
+
+    if not items.exists():
+        print("No items found for the specified filters.")
+    if not new_items.exists():
+        print("No new items found for the specified filters.")
+
+    # Render the template with the context
+>>>>>>> partner-repo/main
     return render(request, 'mainpage.html', {
         'items': items,
         'new_items': new_items,
         'gender': gender,
         'category': category,
         'query': query,  # Pass the query back for the search bar
+<<<<<<< HEAD
+=======
+        'sellers': sellers,
+>>>>>>> partner-repo/main
     })
 
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> partner-repo/main
 # Seller Registration View
 def register_seller(request):
     if request.method == "POST":
         # Initialize forms with POST and FILES data
         seller_form = SellerRegistrationForm(request.POST, request.FILES)
         product_image_form = ProductImageForm(request.POST, request.FILES)
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> partner-repo/main
         # Check if both forms are valid
         if seller_form.is_valid() and product_image_form.is_valid():
             # Save the seller form first
@@ -90,10 +126,17 @@ def register_seller(request):
             # Redirect to the main page after saving
             return redirect('mainpage')
         else:
+<<<<<<< HEAD
             # If forms are invalid, log the errors for debugging
             messages.error(request, "Please fix the errors below.")
             print(seller_form.errors)
             print(product_image_form.errors)
+=======
+            # Debugging - Print errors to console for visibility
+            print("Seller Form Errors:", seller_form.errors)
+            print("Product Image Form Errors:", product_image_form.errors)
+            messages.error(request, "Please fix the errors below.")
+>>>>>>> partner-repo/main
     else:
         # If GET request, initialize empty forms
         seller_form = SellerRegistrationForm()
@@ -101,6 +144,7 @@ def register_seller(request):
 
     return render(request, 'register_seller.html', {
         'seller_form': seller_form,
+<<<<<<< HEAD
         'product_image_form': product_image_form
     })
 def category_items(request, gender, category_name):
@@ -111,6 +155,48 @@ def category_items(request, gender, category_name):
         'items': items,
         'category_name': category_name,
         'gender': gender,
+=======
+        'product_image_form': product_image_form,
+    })
+
+def category_items(request, gender, category_name):
+    # Fetch items by gender and category
+    items = Item.objects.filter(category__name=category_name, category__gender=gender).distinct()
+    filter_form = FilterForm(request.GET)
+
+    # Apply filters
+    if filter_form.is_valid():
+        # Get the cleaned data
+        min_price = filter_form.cleaned_data.get('min_price')
+        max_price = filter_form.cleaned_data.get('max_price')
+        size = filter_form.cleaned_data.get('size')
+        color = filter_form.cleaned_data.get('color')
+        condition = filter_form.cleaned_data.get('condition')
+
+        # Apply price range filter
+        if min_price:
+            items = items.filter(price__gte=min_price)
+        if max_price:
+            items = items.filter(price__lte=max_price)
+
+        # Apply size filter (if size is part of the Item model)
+        if size:
+            items = items.filter(size=size)
+
+        # Apply color filter (if color is part of the Item model)
+        if color:
+            items = items.filter(color=color)
+
+        # Apply condition filter (if condition is part of the Item model)
+        if condition:
+            items = items.filter(condition=condition)
+
+    return render(request, 'category_items.html', {
+        'items': items,
+        'category_name': category_name,
+        'gender': gender,
+        'filter_form': filter_form,  # Pass the form to the template
+>>>>>>> partner-repo/main
     })
 
 
@@ -131,7 +217,11 @@ def login(request):
 @login_required
 def view_cart(request):
     cart_items = CartItem.objects.filter(user=request.user)
+<<<<<<< HEAD
     total_price = sum(item.item.current_price * item.quantity for item in cart_items)
+=======
+    total_price = sum(item.item.price * item.quantity for item in cart_items)
+>>>>>>> partner-repo/main
     return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
 
 @login_required
@@ -142,6 +232,7 @@ def view_wishlist(request):
 @login_required
 def add_to_cart(request, item_id):
     item = get_object_or_404(Item, id=item_id)
+<<<<<<< HEAD
     cart_item, created = CartItem.objects.get_or_create(user=request.user, item=item)
     if not created:
         cart_item.quantity += 1
@@ -150,6 +241,28 @@ def add_to_cart(request, item_id):
     else:
         messages.success(request, f"Added {item.name} to your cart.")
     return redirect('view_cart')
+=======
+    form = AddToCartForm(request.POST or None, item=item)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            selected_size = form.cleaned_data['size']
+            cart_item, created = CartItem.objects.get_or_create(
+                user=request.user, item=item, size=selected_size
+            )
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+                messages.info(request, f"Updated {item.name} (Size: {selected_size}) quantity in your cart.")
+            else:
+                messages.success(request, f"Added {item.name} (Size: {selected_size}) to your cart.")
+            return redirect('view_cart')
+
+    return render(request, 'item_detail.html', {
+        'item': item,
+        'form': form
+    })
+>>>>>>> partner-repo/main
 
 @login_required
 def remove_from_cart(request, item_id):
@@ -212,6 +325,26 @@ from .models import Item
 
 def item_detail(request, id):
     item = get_object_or_404(Item, id=id)
+<<<<<<< HEAD
+=======
+    if request.method == 'POST':
+        selected_size = request.POST.get('size')
+        if not selected_size:
+            messages.error(request, "Please select a size.")
+        else:
+            # Handle adding to cart (modify if needed)
+            cart_item, created = CartItem.objects.get_or_create(
+                user=request.user,
+                item=item,
+                size=selected_size
+            )
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+            messages.success(request, f"Added {item.name} (Size: {selected_size}) to your cart.")
+            return redirect('view_cart')
+
+>>>>>>> partner-repo/main
     return render(request, 'item_detail.html', {'item': item})
 
 def filter_items(request):
@@ -235,4 +368,30 @@ def filter_items(request):
     return render(request, 'mainpage.html', {
         'items': items,
         'filter_form': filter_form,
+<<<<<<< HEAD
     })
+=======
+    })
+
+
+
+def rate_seller(request):
+    if request.method == "POST":
+        form = RateSellerForm(request.POST)
+        if form.is_valid():
+            seller_id = form.cleaned_data['seller_id']
+            rating = int(form.cleaned_data['rating'])
+
+            # Fetch the seller
+            seller = get_object_or_404(Seller, id=seller_id)
+
+            # Update the seller's rating
+            seller.num_ratings += 1
+            seller.rating = (seller.rating * (seller.num_ratings - 1) + rating) / seller.num_ratings
+            seller.save()
+
+            messages.success(request, "Thank you for rating the seller!")
+        else:
+            messages.error(request, "Invalid rating submission.")
+    return redirect('mainpage')
+>>>>>>> partner-repo/main

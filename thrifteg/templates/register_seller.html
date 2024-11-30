@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register as Seller</title>
     <style>
+<<<<<<< HEAD
+=======
+        
+        
+>>>>>>> partner-repo/main
         /* Global Styles */
         * {
             margin: 0;
@@ -125,6 +130,7 @@
     <div class="form-container">
         <h2>Seller Registration Form</h2>
         <form method="post" enctype="multipart/form-data">
+<<<<<<< HEAD
             <button type="submit">Submit</button>
             {% csrf_token %}
             
@@ -186,3 +192,41 @@
     </div>
 </body>
 </html>
+=======
+            {% csrf_token %}
+        
+            {% if seller_form.errors or product_image_form.errors %}
+                <div class="error">
+                    <p>Please fix the following errors:</p>
+                    {{ seller_form.non_field_errors }}
+                    {{ product_image_form.non_field_errors }}
+                </div>
+            {% endif %}
+        
+            <!-- Seller Form Fields -->
+            {% for field in seller_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        
+            <!-- Product Image Form Fields -->
+            {% for field in product_image_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        
+            <!-- Submit Button -->
+            <button type="submit" class="button">Submit</button>
+        </form>
+        
+>>>>>>> partner-repo/main

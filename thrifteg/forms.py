@@ -71,6 +71,7 @@ class CustomSignupForm(UserCreationForm):
         fields = ['username', 'email', 'phone_number', 'address', 'password1', 'password2']
 
 class FilterForm(forms.Form):
+<<<<<<< HEAD
     # Dropdown for category selection
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
@@ -80,17 +81,70 @@ class FilterForm(forms.Form):
     )
     
     # Min price filter
+=======
+    # Price range filters
+>>>>>>> partner-repo/main
     min_price = forms.DecimalField(
         required=False,
         widget=forms.NumberInput(attrs={'class': 'filter-input', 'placeholder': 'Min Price'}),
         min_value=0,
         label="Minimum Price"
     )
+<<<<<<< HEAD
     
     # Max price filter
+=======
+>>>>>>> partner-repo/main
     max_price = forms.DecimalField(
         required=False,
         widget=forms.NumberInput(attrs={'class': 'filter-input', 'placeholder': 'Max Price'}),
         min_value=0,
         label="Maximum Price"
     )
+<<<<<<< HEAD
+=======
+
+    # Size filter
+    size = forms.ChoiceField(
+        required=False,
+        choices=[('S', 'Small'), ('M', 'Medium'), ('L', 'Large'), ('XL', 'Extra Large')],
+        widget=forms.Select(attrs={'class': 'filter-select'}),
+        label="Size"
+    )
+
+    # Color filter
+    color = forms.ChoiceField(
+        required=False,
+        choices=[('Red', 'Red'), ('Blue', 'Blue'), ('Green', 'Green'), ('Black', 'Black')],
+        widget=forms.Select(attrs={'class': 'filter-select'}),
+        label="Color"
+    )
+
+    # Condition filter
+    condition = forms.ChoiceField(
+        required=False,
+        choices=[('New', 'New'), ('Used', 'Used')],
+        widget=forms.Select(attrs={'class': 'filter-select'}),
+        label="Condition"
+    )
+
+class AddToCartForm(forms.Form):
+    size = forms.ChoiceField(choices=[], label="Select Size")
+
+    def __init__(self, *args, **kwargs):
+        item = kwargs.pop('item', None)  # Pass the item instance
+        super().__init__(*args, **kwargs)
+        if item:
+            self.fields['size'].choices = [(size, size) for size in item.get_sizes_list()]
+
+
+class RateSellerForm(forms.Form):
+    seller_id = forms.IntegerField(widget=forms.HiddenInput())  # Hidden seller ID field
+    rating = forms.ChoiceField(
+        choices=[(i, i) for i in range(1, 6)],  # 1 to 5 stars
+        widget=forms.RadioSelect,
+        label="Rate the seller"
+    )
+
+
+>>>>>>> partner-repo/main

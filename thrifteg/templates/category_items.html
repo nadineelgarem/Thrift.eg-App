@@ -4,24 +4,337 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ category_name }} - Thrifteg</title>
+<<<<<<< HEAD
+=======
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        header a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #555;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        header a:hover {
+            background-color: #777;
+        }
+
+        .filter-container {
+            margin: 30px auto;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .toggle-filter-btn {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 12px 20px;
+            color: white;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-filter-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #2575fc, #6a11cb);
+        }
+
+        .filter-form {
+            display: none; /* Hidden by default */
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filter-form label {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #555;
+            margin-right: 5px;
+        }
+
+        .filter-form select,
+        .filter-form input {
+            padding: 8px 12px;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-width: 150px;
+        }
+
+        .apply-filters-btn,
+        .clear-filters-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background: linear-gradient(45deg, #2575fc, #6a11cb);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            align-self: center;
+        }
+
+        .clear-filters-btn {
+            background: #ddd;
+            color: #333;
+        }
+
+        .apply-filters-btn:hover,
+        .clear-filters-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        }
+
+        .active-filters {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .filter-tag {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 12px;
+            background-color: #e4e4e4;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .filter-tag a {
+            margin-left: 5px;
+            color: red;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .filter-tag a:hover {
+            text-decoration: underline;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .product-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .product-item p {
+            font-size: 1em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .pagination a {
+            padding: 10px 15px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background: #555;
+        }
+
+        .pagination span {
+            padding: 10px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+    </style>
+>>>>>>> partner-repo/main
 </head>
 <body>
     <header>
         <h1>{{ category_name }} - {{ gender }}</h1>
         <a href="{% url 'mainpage' %}">Back to Main Page</a>
     </header>
+<<<<<<< HEAD
+=======
+
+    <div class="filter-container">
+        <!-- Button to toggle the filter form -->
+        <button class="toggle-filter-btn">Show Filters</button>
+
+        <!-- Filter Form -->
+        <div class="filter-form" id="filterForm">
+            <form method="get" style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 10px;">
+                <div>
+                    <label for="min_price">Min Price:</label>
+                    <input type="number" name="min_price" id="min_price" placeholder="Min Price">
+                </div>
+                <div>
+                    <label for="max_price">Max Price:</label>
+                    <input type="number" name="max_price" id="max_price" placeholder="Max Price">
+                </div>
+                <div>
+                    <label for="size">Size:</label>
+                    <select name="size" id="size">
+                        <option value="">Any</option>
+                        <option value="S">Small</option>
+                        <option value="M">Medium</option>
+                        <option value="L">Large</option>
+                        <option value="XL">Extra Large</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="color">Color:</label>
+                    <select name="color" id="color">
+                        <option value="">Any</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                        <option value="Black">Black</option>
+                    </select>
+                </div>
+                <button type="submit" class="apply-filters-btn">Apply Filters</button>
+                <button type="reset" class="clear-filters-btn">Clear Filters</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Active Filters -->
+    <div class="active-filters">
+        <span>Active Filters:</span>
+        {% if request.GET.min_price %}
+            <span class="filter-tag">Min Price: {{ request.GET.min_price }} <a href="?">✕</a></span>
+        {% endif %}
+        {% if request.GET.max_price %}
+            <span class="filter-tag">Max Price: {{ request.GET.max_price }} <a href="?">✕</a></span>
+        {% endif %}
+        {% if request.GET.size %}
+            <span class="filter-tag">Size: {{ request.GET.size }} <a href="?">✕</a></span>
+        {% endif %}
+        {% if request.GET.color %}
+            <span class="filter-tag">Color: {{ request.GET.color }} <a href="?">✕</a></span>
+        {% endif %}
+    </div>
+
+    <!-- Items Grid -->
+>>>>>>> partner-repo/main
     <div class="items-grid">
         {% for item in items %}
             <div class="product-item">
                 <img src="{{ item.image.url }}" alt="{{ item.name }}">
                 <h4>{{ item.name }}</h4>
                 <p>${{ item.price }}</p>
+<<<<<<< HEAD
                 <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
+=======
+                <a href="{% url 'add_to_cart' item.id %}" class="button">Add to Cart</a>
+>>>>>>> partner-repo/main
                 <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
             </div>
         {% empty %}
             <p>No items available in this category.</p>
         {% endfor %}
     </div>
+<<<<<<< HEAD
+=======
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleButton = document.querySelector(".toggle-filter-btn");
+            const filterForm = document.querySelector("#filterForm");
+
+            // Ensure the filter form is hidden on page load
+            filterForm.style.display = "none";
+
+            toggleButton.addEventListener("click", function () {
+                // Toggle the visibility of the filter form
+                if (filterForm.style.display === "none" || filterForm.style.display === "") {
+                    filterForm.style.display = "flex"; /* Show as horizontal layout */
+                    toggleButton.textContent = "Hide Filters";
+                } else {
+                    filterForm.style.display = "none"; /* Hide filter form */
+                    toggleButton.textContent = "Show Filters";
+                }
+            });
+        });
+    </script>
+>>>>>>> partner-repo/main
 </body>
 </html>

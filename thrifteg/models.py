@@ -15,22 +15,32 @@ class Category(models.Model):
 
 # Item Model
 class Item(models.Model):
-    name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='items')
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_price = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True,
-        help_text="Discounted price if applicable"
+    name = models.CharField(max_length=100)  # Add a name field for items
+    category = models.ForeignKey(
+        Category,  # Link to the Category model
+        on_delete=models.CASCADE,  # Delete items if the category is deleted
+        related_name='items'  # Allow reverse lookup from Category to Item
     )
-    stock_quantity = models.PositiveIntegerField(default=0, help_text="Number of items available in stock")
-    image = models.ImageField(upload_to='items/')
+    color = models.CharField(max_length=20, null=True, blank=True)
+    condition = models.CharField(
+        max_length=10,
+        choices=[('New', 'New'), ('Used', 'Used')],
+        null=True,
+        blank=True,
+    )
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    stock_quantity = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to="items/")
     date_added = models.DateTimeField(auto_now_add=True)
-    is_new = models.BooleanField(default=True, help_text="Indicates if the item is new")
+    is_new = models.BooleanField(default=True)
+
+    def get_sizes_list(self):
+        return self.available_sizes.split(",") if self.available_sizes else []
 
     def __str__(self):
         return self.name
 
+<<<<<<< HEAD
     @property
     def is_in_stock(self):
         return self.stock_quantity > 0
@@ -38,6 +48,8 @@ class Item(models.Model):
     @property
     def current_price(self):
         return self.discount_price if self.discount_price else self.price
+=======
+>>>>>>> partner-repo/main
 
 # WishlistItem Model
 class WishlistItem(models.Model):
@@ -59,6 +71,12 @@ class Seller(models.Model):
     product_description = models.TextField(default="No description provided")
     identity_image = models.ImageField(upload_to='identity/', default='default.jpg')
 
+<<<<<<< HEAD
+=======
+    rating = models.FloatField(default=0.0)  # Average rating
+    num_ratings = models.PositiveIntegerField(default=0)  # Number of ratings
+
+>>>>>>> partner-repo/main
     def __str__(self):
         return self.name
 
@@ -76,9 +94,18 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='cart_entries')
     quantity = models.PositiveIntegerField(default=1)
+<<<<<<< HEAD
 
     def __str__(self):
         return f"{self.user.username}'s Cart - {self.item.name} (x{self.quantity})"
+=======
+    size = models.CharField(max_length=10, blank=True, null=True)  # Add this field
+
+    def __str__(self):  # Ensure correct indentation
+        return f"{self.item.name} (Size: {self.size}) x {self.quantity}"
+
+# ChatMessage Model
+>>>>>>> partner-repo/main
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
@@ -86,4 +113,8 @@ class ChatMessage(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+<<<<<<< HEAD
         return f"Message from {self.user.username} to {self.seller.name} at {self.timestamp}"
+=======
+        return f"Message from {self.user.username} to {self.seller.name} at {self.timestamp}"
+>>>>>>> partner-repo/main

@@ -84,6 +84,70 @@
         .button.primary:hover {
             background-color: #222;
         }
+<<<<<<< HEAD
+=======
+        /* Rate Sellers Section */
+#rate-sellers {
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#rate-sellers h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.product-item {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.product-item h4 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.product-item form {
+    margin-top: 10px;
+}
+
+.product-item button {
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.product-item button:hover {
+    background-color: #555;
+}
+
+.product-item select {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+>>>>>>> partner-repo/main
 
         /* Hero Banner */
         .hero-banner {
@@ -355,4 +419,37 @@
         }
     </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+<div class="new-arrivals" id="rate-sellers" style="padding-left: 20px;">
+    <div id="rate-sellers">
+        <h2>Rate Our Sellers</h2>
+        <div class="items-grid">
+            {% for seller in sellers %}
+            <div class="product-item">
+                <h4>{{ seller.name }}</h4>
+                <p>Rating: {{ seller.rating }}</p>
+                <p>Total Ratings: {{ seller.num_ratings }}</p>
+                <form method="post" action="{% url 'rate_seller' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="seller_id" value="{{ seller.id }}">
+                    <label for="rating-{{ seller.id }}">Rate:</label>
+                    <select name="rating" id="rating-{{ seller.id }}">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <button type="submit" class="button primary">Submit</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+
+
+>>>>>>> partner-repo/main
