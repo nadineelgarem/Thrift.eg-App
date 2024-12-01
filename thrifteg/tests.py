@@ -1,3 +1,2 @@
-from django.test import TestCase
+# thrifteg/tests/test_views.py
 
-# Create your tests here.

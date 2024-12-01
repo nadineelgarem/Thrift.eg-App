@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register as Seller</title>
     <style>
-<<<<<<< HEAD
-=======
         
         
->>>>>>> partner-repo/main
         /* Global Styles */
         * {
             margin: 0;
@@ -130,69 +127,6 @@
     <div class="form-container">
         <h2>Seller Registration Form</h2>
         <form method="post" enctype="multipart/form-data">
-<<<<<<< HEAD
-            <button type="submit">Submit</button>
-            {% csrf_token %}
-            
-            <!-- Display form errors -->
-            {% if seller_form.errors %}
-                <div class="error">
-                    <p>Please fix the following errors:</p>
-                    {{ seller_form.non_field_errors }}
-                </div>
-            {% endif %}
-
-            <!-- Seller form fields -->
-            <div class="form-group">
-                {{ seller_form.name.label_tag }} 
-                {{ seller_form.name }}
-                {{ seller_form.name.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.email.label_tag }}
-                {{ seller_form.email }}
-                {{ seller_form.email.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.phone_number.label_tag }}
-                {{ seller_form.phone_number }}
-                {{ seller_form.phone_number.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.address.label_tag }}
-                {{ seller_form.address }}
-                {{ seller_form.address.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.product_type.label_tag }}
-                {{ seller_form.product_type }}
-                {{ seller_form.product_type.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.product_description.label_tag }}
-                {{ seller_form.product_description }}
-                {{ seller_form.product_description.errors }}
-            </div>
-            <div class="form-group">
-                {{ seller_form.identity_image.label_tag }}
-                {{ seller_form.identity_image }}
-                {{ seller_form.identity_image.errors }}
-            </div>
-
-            <!-- Single Product Image Upload -->
-            <div class="image-upload-group">
-                <h3>Product Image</h3>
-                {{ product_image_form.image.label_tag }}
-                {{ product_image_form.image }}
-                {{ product_image_form.image.errors }}
-            </div>
-
-            <button type="submit" class="button">Submit</button>
-        </form>
-    </div>
-</body>
-</html>
-=======
             {% csrf_token %}
         
             {% if seller_form.errors or product_image_form.errors %}
@@ -229,4 +163,3 @@
             <button type="submit" class="button">Submit</button>
         </form>
         
->>>>>>> partner-repo/main

@@ -4,10 +4,10 @@ from django.contrib import admin
 # thrifteg/admin.py
 from django.contrib import admin
 from .models import Item, Category, Seller, ProductImage
-from .models import Checkout
+from .models import CartItem
 
 admin.site.register(Item)
 admin.site.register(Category)
 admin.site.register(Seller)
 admin.site.register(ProductImage)
-admin.site.register(Checkout)
+admin.site.register(CartItem)
