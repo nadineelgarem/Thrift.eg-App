@@ -2,19 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ item.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ item.name }} - Item Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .details p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .form-section {
+            margin-top: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"], textarea {
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        /* New rating display section */
+        .rating-display {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .rating-stars {
+            color: #f39c12;
+            font-size: 1.2em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ item.name }}</h1>
-    <p>{{ item.description }}</p>
-    <p>Price: ${{ item.price }}</p>
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add to Cart</button>
-    </form>
+    <div class="container">
+        <!-- Item Details Section -->
+        <h1>{{ item.name }}</h1>
+        <img src="{{ item.image.url }}" alt="{{ item.name }}">
+        <div class="details">
+            <p><strong>Price:</strong> ${{ item.price }}</p>
+            <p><strong>Description:</strong> {{ item.description }}</p>
+            <p><strong>Size:</strong> {{ item.size }}</p>
+            <p><strong>Color:</strong> {{ item.color }}</p>
+            <p><strong>Condition:</strong> {{ item.condition }}</p>
+        </div>
 
-    <a href="{% url 'view_cart' %}">View Cart</a>
+        <!-- Rating Display Section -->
+        <div class="rating-display">
+            <p>
+                <strong>Product Rating:</strong>
+                {{ item.rating|default:"No ratings yet" }}
+                {% if item.num_ratings > 0 %}
+                    <span class="rating-stars">★ {{ item.rating|floatformat:1 }}</span> ({{ item.num_ratings }} reviews)
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Seller Information -->
+        {% if item.seller %}
+    <h2>Seller: <a href="{% url 'seller_profile' item.seller.id %}">{{ item.seller.name }}</a></h2>
+    <p><strong>Store Name:</strong> {{ item.seller.store_name }}</p>
+    <p><strong>Email:</strong> <a href="mailto:{{ item.seller.email }}">{{ item.seller.email }}</a></p>
+{% else %}
+    <h2>Seller: Not available</h2>
+{% endif %}
+
+        <!-- Rate Seller Section -->
+        <div class="form-section">
+            <h3>Rate the Seller</h3>
+            {% if seller %}
+            <form method="POST" action="{% url 'rate_seller' seller.id %}">
+        {% else %}
+            <p>No seller available to rate.</p>
+        {% endif %}
+                        {% csrf_token %}
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" name="rating" id="rating" min="1" max="5" required>
+                <textarea name="feedback" rows="3" placeholder="Leave feedback for the seller (optional)"></textarea>
+                <button type="submit">Submit Rating</button>
+            </form>
+        </div>
+
+        <!-- Rate Product Section -->
+        <div class="form-section">
+            <h3>Rate the Product</h3>
+            <form method="POST" action="{% url 'rate_product' item.id %}">
+                {% csrf_token %}
+                <label for="product_rating">Rating (1-5):</label>
+                <input type="number" name="rating" id="product_rating" min="1" max="5" required>
+                <textarea name="feedback" rows="3" placeholder="Leave a feedback for the product (optional)"></textarea>
+                <button type="submit">Submit Rating</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

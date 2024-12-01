@@ -282,13 +282,24 @@
                 <img src="{{ item.image.url }}" alt="{{ item.name }}">
                 <h4>{{ item.name }}</h4>
                 <p>${{ item.price }}</p>
+                <p>
+                    Rating: 
+                    {% if item.num_ratings > 0 %}
+                        {{ item.rating|floatformat:1 }} ★ ({{ item.num_ratings }} reviews)
+                    {% else %}
+                        No ratings yet
+                    {% endif %}
+                </p>
                 <a href="{% url 'add_to_cart' item.id %}" class="button">Add to Cart</a>
                 <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
+                <a href="{% url 'item_detail' item.id %}">View Details</a>
+
             </div>
         {% empty %}
             <p>No items available in this category.</p>
         {% endfor %}
     </div>
+    
 
     <!-- Pagination -->
     <div class="pagination">
