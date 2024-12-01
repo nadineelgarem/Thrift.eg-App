@@ -1,11 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Seller, ProductImage
-from .models import Category 
-from .models import Checkout
+from .models import Seller, ProductImage, Category, Checkout
 
-# Seller Registration Form
+
 class SellerRegistrationForm(forms.ModelForm):
     product_type = forms.CharField(
         max_length=100,
@@ -26,29 +24,71 @@ class SellerRegistrationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Seller
+        model = Seller  # This links the form to the Seller model
         fields = ['name', 'email', 'phone_number', 'address', 'store_name', 'product_type', 'product_description', 'identity_image']
 
+class SellerRatingForm(forms.Form):
+    rating = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        widget=forms.NumberInput(attrs={'placeholder': 'Rate 1-5'}),
+        label="Rate the Seller"
+    )
+    feedback = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Provide feedback'}),
+        label="Feedback"
+    )
+
+class ProductRatingForm(forms.Form):
+    rating = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        label="Rate the Product (1-5)",
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+    )
+    feedback = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Provide feedback (optional)'}),
+        label="Feedback",
+    )
+    class Meta:
+        model = Seller
+        fields = ['name', 'email', 'phone_number', 'address', 'store_name', 'product_type', 'product_description', 'identity_image']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your full name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your email address'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your phone number'}),
+            'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Your address'}),
+            'store_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your store name'}),
+        }
+
+# Checkout Form
 class CheckoutForm(forms.ModelForm):
     class Meta:
         model = Checkout
         fields = ['full_name', 'address', 'city', 'zip_code', 'phone_number', 'payment_method']
         widgets = {
-            'address': forms.Textarea(attrs={'rows': 3}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
+            'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-control', 'placeholder': 'Address'}),
+            'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
+            'zip_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ZIP Code'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
             'payment_method': forms.Select(attrs={'class': 'form-control'}),
         }
+
 # Product Image Form
 class ProductImageForm(forms.ModelForm):
     image = forms.ImageField(
         required=True,
         label="Product Image",
-        help_text="Upload an image for your product"
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'}),
     )
     description = forms.CharField(
         max_length=255,
         required=False,
         label="Image Description",
-        help_text="Provide a brief description of the image (optional)"
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Brief description of the image (optional)'}),
     )
 
     class Meta:
@@ -60,61 +100,71 @@ class CustomSignupForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
         label="Email Address",
-        help_text="Enter a valid email address"
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter a valid email address'}),
     )
     phone_number = forms.CharField(
         max_length=15,
         required=True,
         label="Phone Number",
-        help_text="Provide your contact number"
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your contact number'}),
     )
     address = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Enter your address'}),
+        widget=forms.Textarea(attrs={'rows': 2, 'class': 'form-control', 'placeholder': 'Enter your address'}),
         required=False,
         label="Address",
-        help_text="Your address (optional)"
     )
 
     class Meta:
         model = User
         fields = ['username', 'email', 'phone_number', 'address', 'password1', 'password2']
-
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
+        }
+class ItemRatingForm(forms.Form):
+    rating = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        widget=forms.NumberInput(attrs={'placeholder': 'Rate 1-5'}),
+        label="Rate this item"
+    )
+# Filter Form for Item Search
 class FilterForm(forms.Form):
     # Price range filters
     min_price = forms.DecimalField(
         required=False,
-        widget=forms.NumberInput(attrs={'class': 'filter-input', 'placeholder': 'Min Price'}),
         min_value=0,
-        label="Minimum Price"
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Min Price'}),
+        label="Minimum Price",
     )
     max_price = forms.DecimalField(
         required=False,
-        widget=forms.NumberInput(attrs={'class': 'filter-input', 'placeholder': 'Max Price'}),
         min_value=0,
-        label="Maximum Price"
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Max Price'}),
+        label="Maximum Price",
     )
 
     # Size filter
     size = forms.ChoiceField(
         required=False,
         choices=[('S', 'Small'), ('M', 'Medium'), ('L', 'Large'), ('XL', 'Extra Large')],
-        widget=forms.Select(attrs={'class': 'filter-select'}),
-        label="Size"
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Size",
     )
 
     # Color filter
     color = forms.ChoiceField(
         required=False,
         choices=[('Red', 'Red'), ('Blue', 'Blue'), ('Green', 'Green'), ('Black', 'Black')],
-        widget=forms.Select(attrs={'class': 'filter-select'}),
-        label="Color"
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Color",
     )
 
     # Condition filter
     condition = forms.ChoiceField(
         required=False,
         choices=[('New', 'New'), ('Used', 'Used')],
-        widget=forms.Select(attrs={'class': 'filter-select'}),
-        label="Condition"
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Condition",
     )
-

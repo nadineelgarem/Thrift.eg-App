@@ -37,6 +37,13 @@ urlpatterns = [
     # Category view by name
     path('category/<str:category_name>/', views.category_items, name='category_items'),
     path('checkout/', views.checkout, name='checkout'),
+    path('rate_seller/<int:seller_id>/', views.rate_seller, name='rate_seller'),
+path('rate_product/<int:item_id>/', views.rate_product, name='rate_product'),
+path('seller/<int:seller_id>/', views.seller_profile, name='seller_profile'),
+
+   path('item/<int:id>/', views.item_detail, name='item_detail'),
+
+
 
 ]
 

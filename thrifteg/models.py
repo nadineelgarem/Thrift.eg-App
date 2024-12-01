@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Avg
 
-# Category Model
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)  # Example field for category name
     gender = models.CharField(
@@ -9,9 +11,11 @@ class Category(models.Model):
         choices=[('Women', 'Women'), ('Men', 'Men')],
         help_text="Target gender for the category"
     )
+    seller = models.ForeignKey('thrifteg.Seller', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.gender})"
+
 
 class Checkout(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='checkouts')
@@ -56,10 +60,12 @@ class Item(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     is_new = models.BooleanField(default=True)
 
+    # Add fields for rating
+    rating = models.FloatField(default=0.0)  # Average rating
+    num_ratings = models.PositiveIntegerField(default=0)  # Number of ratings received
+
     def __str__(self):
         return self.name
-
-
 
 # WishlistItem Model
 class WishlistItem(models.Model):
@@ -80,9 +86,19 @@ class Seller(models.Model):
     product_type = models.CharField(max_length=100, default="Not specified")
     product_description = models.TextField(default="No description provided")
     identity_image = models.ImageField(upload_to='identity/', default='default.jpg')
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)  # Average rating
+    num_ratings = models.PositiveIntegerField(default=0)  # Total ratings received
+
+    def update_rating(self, new_rating):
+        """Update the seller's average rating."""
+        total_rating = self.rating * self.num_ratings + new_rating
+        self.num_ratings += 1
+        self.rating = total_rating / self.num_ratings
+        self.save()
 
     def __str__(self):
         return self.name
+
 
 # ProductImage Model
 class ProductImage(models.Model):

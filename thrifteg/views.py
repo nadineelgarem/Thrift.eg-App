@@ -8,6 +8,10 @@ from django.forms import modelformset_factory
 from .models import Item, CartItem, WishlistItem, Category, Seller, ProductImage, ChatMessage
 from .forms import SellerRegistrationForm, ProductImageForm, FilterForm 
 from .forms import CheckoutForm
+from .forms import SellerRatingForm, ProductRatingForm
+from .forms import ItemRatingForm
+from django import forms
+
 
 
 # Create your views here.
@@ -70,6 +74,26 @@ def mainpage(request):
 
 
 
+@login_required
+def rate_product(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    if request.method == 'POST':
+        form = ProductRatingForm(request.POST)
+        if form.is_valid():
+            rating = form.cleaned_data['rating']
+            feedback = form.cleaned_data.get('feedback', '')
+
+            # Update the item's rating (you need fields like `rating` and `num_ratings` in the `Item` model)
+            item.rating = (item.rating * item.num_ratings + rating) / (item.num_ratings + 1)
+            item.num_ratings += 1
+            item.save()
+
+            messages.success(request, f'Thank you for rating {item.name}!')
+            return redirect('mainpage')  # Redirect to the main page or another page
+    else:
+        form = ProductRatingForm()
+
+    return render(request, 'rate_product.html', {'item': item, 'form': form})
 # Seller Registration View
 def register_seller(request):
     if request.method == "POST":
@@ -144,6 +168,33 @@ def category_items(request, gender, category_name):
     })
 
 
+
+@login_required
+def rate_seller(request, seller_id):
+    # Get the seller or return a 404 if not found
+    seller = get_object_or_404(Seller, id=seller_id)
+
+    if request.method == 'POST':
+        form = SellerRatingForm(request.POST)  # Bind POST data to the form
+        if form.is_valid():
+            # Extract rating and feedback from the form
+            rating = form.cleaned_data['rating']
+            feedback = form.cleaned_data.get('feedback', '')
+
+            # Update the seller's rating and save
+            seller.rating = (seller.rating * seller.num_ratings + rating) / (seller.num_ratings + 1)
+            seller.num_ratings += 1
+            seller.save()
+
+            # Display a success message and redirect
+            messages.success(request, f"Thank you for rating {seller.name}!")
+            return redirect('mainpage')  # Replace 'mainpage' with the desired redirect
+    else:
+        # If GET request, render the form
+        form = SellerRatingForm()
+
+    # Render the rating form with the seller's information
+    return render(request, 'rate_seller.html', {'seller': seller, 'form': form})
 
 def login(request):
     if request.method == "POST":
@@ -266,10 +317,59 @@ def search_results(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Item
-
 def item_detail(request, id):
     item = get_object_or_404(Item, id=id)
-    return render(request, 'item_detail.html', {'item': item})
+
+    # Check if the item has a category and seller
+    seller = getattr(item.category, 'seller', None)
+
+    seller_rating_form = SellerRatingForm()
+    product_rating_form = ProductRatingForm()
+
+    if request.method == "POST":
+        if "rate_seller" in request.POST and seller:  # Handle seller rating
+            seller_rating_form = SellerRatingForm(request.POST)
+            if seller_rating_form.is_valid():
+                new_rating = seller_rating_form.cleaned_data['rating']
+                seller.rating = (seller.rating * seller.num_ratings + new_rating) / (seller.num_ratings + 1)
+                seller.num_ratings += 1
+                seller.save()
+                messages.success(request, "Thanks for rating the seller!")
+                return redirect('item_detail', id=item.id)
+
+        elif "rate_product" in request.POST:  # Handle product rating
+            product_rating_form = ProductRatingForm(request.POST)
+            if product_rating_form.is_valid():
+                new_rating = product_rating_form.cleaned_data['rating']
+                item.rating = (item.rating * item.num_ratings + new_rating) / (item.num_ratings + 1)
+                item.num_ratings += 1
+                item.save()
+                messages.success(request, "Thanks for rating the product!")
+                return redirect('item_detail', id=item.id)
+
+    return render(request, 'item_detail.html', {
+        'item': item,
+        'seller': seller,
+        'seller_rating_form': seller_rating_form,
+        'product_rating_form': product_rating_form,
+    })
+
+
+class SellerRatingForm(forms.Form):
+    rating = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        widget=forms.NumberInput(attrs={'placeholder': 'Rate 1-5'}),
+        label="Rate the Seller"
+    )
+    feedback = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Provide feedback'}),
+        label="Feedback"
+    )
+def seller_profile(request, seller_id):
+    seller = get_object_or_404(Seller, id=seller_id)
+    return render(request, 'seller_profile.html', {'seller': seller})
 
 def filter_items(request):
     # Initialize filter form
