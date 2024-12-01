@@ -267,9 +267,12 @@ def search_results(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Item
 
-def item_detail(request, id):
-    item = get_object_or_404(Item, id=id)
-    return render(request, 'item_detail.html', {'item': item})
+def item_details(request, id):
+    try:
+        item = Item.objects.get(id=id)
+    except Item.DoesNotExist:
+        return render(request, '404.html')  # Or another error page
+    return render(request, 'item_details.html', {'item': item})
 
 def filter_items(request):
     # Initialize filter form

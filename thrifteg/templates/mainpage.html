@@ -84,8 +84,6 @@
         .button.primary:hover {
             background-color: #222;
         }
-<<<<<<< HEAD
-=======
         /* Rate Sellers Section */
 #rate-sellers {
     margin: 40px auto;
@@ -108,11 +106,16 @@
 }
 
 .product-item {
-    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px;
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    width: 250px;
+    height: auto;
 }
 
 .product-item h4 {
@@ -147,7 +150,6 @@
     width: 100%;
 }
 
->>>>>>> partner-repo/main
 
         /* Hero Banner */
         .hero-banner {
@@ -295,6 +297,7 @@
         .product-item .button.primary:hover {
             background-color: #555;
         }
+        
 
         .product-item .button {
             display: block;
@@ -311,6 +314,8 @@
             background-color: #555;
         }
 
+
+
         /* Footer */
         footer {
             background-color: #333;
@@ -319,6 +324,7 @@
             padding: 20px 0;
             font-size: 0.9em;
         }
+        
     </style>
 </head>
 <body>
@@ -379,18 +385,20 @@
             <div class="items-grid">
                 {% for item in new_items %}
                 <div class="product-item">
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
-                    <h4>{{ item.name }}</h4>
-                    <p>${{ item.price }}</p>
+                    <!-- Item Details Button -->
+                    <a href="{% url 'item_details' item.id %}" class="button item-details-button">Item Details</a>       
+                    <!-- Add to Cart and Wishlist buttons -->
                     <a href="{% url 'add_to_cart' item.id %}" class="button primary">Add to Cart</a>
                     <a href="{% url 'add_to_wishlist' item.id %}" class="button">Add to Wishlist</a>
+        
+                    <!-- Filter dropdown (not affected by changes) -->
                     <div class="filter-dropdown" id="filterDropdown">
                         <a href="#">Price</a>
                         <a href="#">Category</a>
                         <a href="#">Condition</a>
                         <a href="#">Size</a>
                     </div>
-                    </div>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -419,9 +427,6 @@
         }
     </script>
 </body>
-<<<<<<< HEAD
-</html>
-=======
 </html>
 <div class="new-arrivals" id="rate-sellers" style="padding-left: 20px;">
     <div id="rate-sellers">
@@ -432,6 +437,8 @@
                 <h4>{{ seller.name }}</h4>
                 <p>Rating: {{ seller.rating }}</p>
                 <p>Total Ratings: {{ seller.num_ratings }}</p>
+                <p>Total Price: ${{ total_price }}</p>
+
                 <form method="post" action="{% url 'rate_seller' %}">
                     {% csrf_token %}
                     <input type="hidden" name="seller_id" value="{{ seller.id }}">
@@ -449,7 +456,3 @@
             {% endfor %}
         </div>
     </div>
-    
-
-
->>>>>>> partner-repo/main

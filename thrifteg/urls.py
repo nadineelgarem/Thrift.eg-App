@@ -17,7 +17,7 @@ urlpatterns = [
     path('chat/<int:seller_id>/', views.chat_view, name='chat_view'),
 
     path('search/', views.search_results, name='search_results'),
-    path('item/<int:id>/', views.item_detail, name='item_detail'),
+    path('item/<int:id>/', views.item_details, name='item_detail'),
 
     path('filter/', views.filter_items, name='filter_items'),
 
